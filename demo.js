@@ -1,80 +1,3 @@
-// const readline = require('readline');
-
-// const fs = require('fs');
-
-// const newArray = [];
-// const arrFemale = [];
-// const arrMale = [];
-// let counter = 0;
-// let indexCountry;
-// let indexIndicatorCode;
-// let indexYear;
-// let indexValue;
-
-// const rl = readline.createInterface({
-//   input: fs.createReadStream('./Indicators.csv'), // Read CSV file.
-// });
-// function remove(array, element) {
-//   return array.filter(e => e !== element); // fn to remove irrelevant commas
-// }
-// rl.on('line', (line) => {
-//   // console.log(`Line from file: ${line}`);
-//   // console.log(typeof(line));
-
-//   counter += 1;
-
-//   const arr = line.split((/(".*?"|[^",]+)(?=,|$)+/g));
-
-//   let filteredArray = remove(arr, ',');
-//   filteredArray = remove(filteredArray, '');
-
-//   if (counter === 1) { // headers
-//     // console.log(arr);
-//     indexCountry = filteredArray.indexOf('CountryName');
-//     indexYear = filteredArray.indexOf('Year');
-//     indexIndicatorCode = filteredArray.indexOf('IndicatorCode');
-//     indexValue = filteredArray.indexOf('Value');
-//   }
-//   if (filteredArray[indexCountry] === 'India') { // filtration
-//     if (filteredArray[indexIndicatorCode] === 'SP.DYN.LE00.FE.IN') {
-//       const tempObj = {
-//         year: filteredArray[indexYear],
-//         le_female: filteredArray[indexValue], // female
-//       };
-//       arrFemale.push(tempObj);
-//     } else if (filteredArray[indexIndicatorCode] === 'SP.DYN.LE00.MA.IN') {
-//       const tempObj = {
-//         year: filteredArray[indexYear],
-//         le_male: filteredArray[indexValue], // male
-//       };
-//       arrMale.push(tempObj);
-//     }
-//   }
-// }).on('close', () => {
-//   let i;
-//   let j;
-//   for (i = 0; i < arrFemale.length; i += 1) {
-//     for (j = 0; j < arrMale.length; j += 1) { // compare both array of objects
-//       if (i === j) {
-        
-//         const tempObj = Object.assign(arrFemale[j], arrMale[i]); // new object for json
-//         newArray.push(tempObj); // final filtered array of objects
-//       }
-//     }
-//   }
-//   // console.log(newArray)
-//   const myJSON = JSON.stringify(newArray); // JSON creation
-
-//   fs.writeFile('output.json', myJSON, 'utf8', (err) => {
-//     if (err) {
-//       console.log('An error occured while writing JSON Object to File.');
-//       return console.log(err);
-//     }
-//   });
-//   console.log('JSON file has been saved.');
-// });
-
-
 /**********  variable to store CSV File   *********/
 const csvFile = "./Indicators.csv";
 
@@ -91,8 +14,7 @@ let indexCountryCode;
 
 /**********  Array variable to store Filtered Array of Objects  *********/
 let newArray = [];     //multi-line
-let newArrayGrowth = [];
-let newArrayAsia = []; //stacked
+let newArrayTotal = []; //stacked
 
 /**********  Array variables to store specific Objects ********/
 let male = [];
@@ -108,9 +30,9 @@ let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Banglades
 ,'Sri Lanka','Syria','Taiwan','Tajikistan','Thailand','Timor-Leste','Turkey','Turkmenistan'
 ,'United Arab Emirates','Uzbekistan','Vietnam','Yemen'];
 
-//let asia_female = [];
-//let asia_male = [];
+let arr_total = [];
 let StackArray = [];
+let new_arr_total = [];
 
 let cn = 0;
 /**********  counter variable for  storing header indexes   *********/
@@ -201,31 +123,31 @@ rl.on('line', (line)=>{
 
             male.push(temp_obj);
 
-        }
+        }}
 
-    /* for(let i=0;i<countries.length;i++) {
+     for(let i=0;i<countries.length;i++) {
         if(countries[i]===filteredArray[indexCountry]) {
             if(filteredArray[indexYear] === "2000") {
-                if(filteredArray[indexIndicatorCode]==="SP.RUR.TOTL") {
+                if(filteredArray[indexIndicatorCode]==="SP.DYN.LE00.IN") {
                     let outobj = {
                         country: filteredArray[indexCountry],
-                        rur_val: filteredArray[indexValue]
+                        le_total: filteredArray[indexValue]
                     }
-                    asia_female.push(outobj);
+                    arr_total.push(outobj);        // bar chart
                 }
-                else if(filteredArray[indexIndicatorCode]==="SP.URB.TOTL") {
-                    let outobj = {
-                        country: filteredArray[indexCountry],
-                        urb_val: filteredArray[indexValue]
-                    }
-                    asia_male.push(outobj);
+                
                 }
             }                        
-        }
-    } */
+        
+    }
+     arr_total=arr_total.sort(function (a, b) {
+     return b.le_total - a.le_total
+   })
+     for(i=0;i<5;i++)
+     {
+      new_arr_total[i]=arr_total[i];
+     }
 
-
-}
 }).on('close', () => {
 console.log("here.....")
     for(i=0;i<arr_birth.length;i++) {
@@ -270,10 +192,10 @@ console.log("here.....")
     //     newArrayAsia.push(temp_obj);
     // }
 
-    newArrayGrowth = arr_ur_growth;
+    
     /**********  creating JSON file from Array of Objects  *********/
     var myJSON = JSON.stringify(newArray, 1,1);
-    //var myJSON2 = JSON.stringify(newArrayGrowth, 1, 1);
+    var myJSON2 = JSON.stringify(new_arr_total, 1, 1);
     var myJSON3 = JSON.stringify(StackArray, 1, 1);
     fs.writeFile("output.json", myJSON, 'utf8', function (err) {
         if (err) {
@@ -291,13 +213,13 @@ console.log("here.....")
 
         console.log("JSON file3 has been saved.");
     });
-    // fs.writeFile("output3.json", myJSON3, 'utf8', function (err) {
-    //     if (err) {
-    //         console.log("An error occured while writing JSON Object to File.");
-    //         return console.log(err);
-    //     }
+    fs.writeFile("output2.json", myJSON2, 'utf8', function (err) {
+        if (err) {
+            console.log("An error occured while writing JSON Object to File.");
+            return console.log(err);
+        }
 
-    //     console.log("JSON file3 has been saved.");
-    // });
+        console.log("JSON file2 has been saved.");
+    });
 
 });
