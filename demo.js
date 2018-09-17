@@ -30,7 +30,7 @@ let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Banglades
 ,'Sri Lanka','Syria','Taiwan','Tajikistan','Thailand','Timor-Leste','Turkey','Turkmenistan'
 ,'United Arab Emirates','Uzbekistan','Vietnam','Yemen'];
 
-let arr_total = [];
+let arr_total = []; // bar
 let StackArray = [];
 let new_arr_total = [];
 
@@ -71,7 +71,7 @@ rl.on('line', (line)=>{
 
     /**********  Filtering the dataset according to Country-India and IndicatorName*********/
 
-    if(filteredArray[indexCountry] === "India") {
+    if(filteredArray[indexCountry] === "India") {   // multi line
 
         if(filteredArray[indexIndicatorCode] === "SP.DYN.CBRT.IN") {
             
@@ -93,16 +93,9 @@ rl.on('line', (line)=>{
             arr_death.push(temp_obj);
 
         }
-        /*else if(filteredArray[indexIndicatorCode] === "SP.URB.GROW"){
-            let temp_obj = {
-                year: filteredArray[indexYear],
-                growth_val: filteredArray[indexValue]
-            }
-            
-            arr_ur_growth.push(temp_obj);
-        } */
+        
     }
-    if(filteredArray[indexCountry] === "India") {
+    if(filteredArray[indexCountry] === "India") {       // filtration for stacked
 
         if(filteredArray[indexIndicatorCode] === "SP.DYN.LE00.FE.IN") {
             
@@ -133,20 +126,14 @@ rl.on('line', (line)=>{
                         country: filteredArray[indexCountry],
                         le_total: filteredArray[indexValue]
                     }
-                    arr_total.push(outobj);        // bar chart
+                    arr_total.push(outobj);        // bar chart(array of all countries)
                 }
                 
                 }
             }                        
         
     }
-     arr_total=arr_total.sort(function (a, b) {
-     return b.le_total - a.le_total
-   })
-     for(i=0;i<5;i++)
-     {
-      new_arr_total[i]=arr_total[i];
-     }
+     
 
 }).on('close', () => {
 console.log("here.....")
@@ -168,6 +155,13 @@ console.log("here.....")
             }            
         }
     }
+    arr_total=arr_total.sort(function (a, b) {        // sorting for Top 5 countries
+     return b.le_total - a.le_total
+   })
+     for(i=0;i<5;i++)
+     {
+      new_arr_total[i]=arr_total[i];
+     }
 
     // for(i=0;i<asia_female.length;i++){
     //     for(j=0;j<asia_male.length;j++){
